@@ -6,5 +6,6 @@ from core.application import Application
 ctk.set_appearance_mode(APPEARANCE)
 ctk.set_default_color_theme(THEME)
 
-app = Application()
-app.mainloop()
+if __name__ == "__main__":
+    app = Application()
+    app.mainloop()
