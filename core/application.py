@@ -1,8 +1,8 @@
 import customtkinter as ctk
 
 from config import APP_NAME, WINDOW_HEIGHT, WINDOW_WIDTH
-from views.connection import ConnectionView
-from views.dashboard import RouterDashboard
+from views.connection_view import ConnectionView
+from views.dashboard_view import RouterDashboardView
 
 class Application(ctk.CTk):
 
@@ -23,7 +23,7 @@ class Application(ctk.CTk):
     def show_dashboard(self):
         self.clear_view()
 
-        dashboard = RouterDashboard(self)
+        dashboard = RouterDashboardView(self)
         dashboard.pack(fill="both", expand=True)
 
     def clear_view(self):

@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-class RouterDashboard(ctk.CTkFrame):
+class RouterDashboardView(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
 

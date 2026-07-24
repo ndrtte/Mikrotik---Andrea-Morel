@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from services.mikrotik_connection import MikroTikService
+from controller.mikrotik_connection import MikroTikService
 
 class ConnectionView(ctk.CTkFrame):
     def __init__(self, parent):
