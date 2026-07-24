@@ -76,12 +76,10 @@ class ConnectionView(ctk.CTkFrame):
             user,
             password
         )
-
         if success:
             print("Conectado correctamente")
             print(result)
-
-            #self.show_dashboard()
+            self.master.show_dashboard()
 
         else:
             print("Error de conexión:")
