@@ -90,7 +90,8 @@ class Application(ctk.CTk):
             "dhcp": lambda: DhcpView(
                 self.dashboard.view_container,
                 self.dhcp_controller,
-                self.show_message
+                self.show_message,
+                self.interface_util
             )
         }
         

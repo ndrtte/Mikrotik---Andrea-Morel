@@ -4,11 +4,12 @@ import customtkinter as ctk
 
 
 class DhcpView(ctk.CTkFrame):
-    def __init__(self, parent, controller, show_message):
+    def __init__(self, parent, controller, show_message, interface_util):
         super().__init__(parent)
 
         self.controller = controller
         self.show_message = show_message
+        self.interface_util = interface_util
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=2)
@@ -20,7 +21,6 @@ class DhcpView(ctk.CTkFrame):
         self.small_font = ctk.CTkFont(size=12)
         self.small_bold_font = ctk.CTkFont(size=12, weight="bold")
 
-        self.interfaces = ["ether1", "ether2", "ether3", "wlan1"]
         self.address_pools = ["pool_lan", "pool_guest", "pool_office"]
         self.disabled_options = ["no", "yes"]
 
@@ -112,7 +112,10 @@ class DhcpView(ctk.CTkFrame):
         ctk.CTkLabel(server_card, text="Interfaz", font=self.label_font).grid(
             row=3, column=0, sticky="w", padx=20
         )
-        self.interface_combobox = ctk.CTkComboBox(server_card, values=self.interfaces)
+        
+        success, interface_values = self.interface_util.get_all_interfaces()
+        
+        self.interface_combobox = ctk.CTkComboBox(server_card, values=interface_values)
         self.interface_combobox.grid(row=4, column=0, sticky="ew", padx=20, pady=(2, 10))
 
         ctk.CTkLabel(server_card, text="Pool de direcciones", font=self.label_font).grid(
