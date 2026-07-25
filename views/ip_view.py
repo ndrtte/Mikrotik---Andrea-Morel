@@ -72,63 +72,79 @@ class IpView(ctk.CTkFrame):
         )
 
 
-        list_frame = ctk.CTkFrame(self)
-        list_frame.pack(
+        self.list_frame = ctk.CTkFrame(self)
+        self.list_frame.pack(
             padx=20,
             pady=20,
             fill="both",
             expand=True
         )
 
-        header = ctk.CTkFrame(list_frame, fg_color="transparent")
+        self.create_table_header()
+
+        self.load_ips()
+    
+    def create_table_header(self):
+        header = ctk.CTkFrame(self.list_frame, fg_color="transparent")
         header.pack(fill="x", padx=10, pady=(10, 5))
 
         ctk.CTkLabel(header, text="Dirección", width=180).grid(row=0, column=0)
         ctk.CTkLabel(header, text="Red", width=140).grid(row=0, column=1)
-        ctk.CTkLabel(header, text="Interfaz", width=120).grid(row=0, column=3)
-        ctk.CTkLabel(header, text="Acción", width=90).grid(row=0, column=4)
+        ctk.CTkLabel(header, text="Interfaz", width=120).grid(row=0, column=2)
+        ctk.CTkLabel(header, text="Acción", width=90).grid(row=0, column=3)
+        
+    def load_ips(self):
+        for widget in self.list_frame.winfo_children():
+            if widget.winfo_name() != "!ctkframe": 
+                widget.destroy()
 
         success, ip_values = self.controller.get_all_ip()
 
-        if success:
+        if not success:
+            self.show_message(f"Error cargando IPs: {ip_values}")
+            return
 
-            for item in ip_values:
+        for item in ip_values:
 
-                row = ctk.CTkFrame(list_frame)
-                row.pack(fill="x", padx=10, pady=4)
+            row = ctk.CTkFrame(self.list_frame)
+            row.pack(fill="x", padx=10, pady=4)
 
-                ctk.CTkLabel(
-                    row,
-                    text=item["ip"],
-                    width=180,
-                    anchor="w"
-                ).grid(row=0, column=0, padx=5, pady=8)
+            ctk.CTkLabel(
+                row,
+                text=item["ip"],
+                width=180,
+                anchor="w"
+            ).grid(row=0, column=0, padx=5, pady=8)
 
-                ctk.CTkLabel(
-                    row,
-                    text=item["network"],
-                    width=140
-                ).grid(row=0, column=1, padx=5)
+            ctk.CTkLabel(
+                row,
+                text=item["network"],
+                width=140
+            ).grid(row=0, column=1, padx=5)
 
-                ctk.CTkLabel(
-                    row,
-                    text=item["interface"],
-                    width=120
-                ).grid(row=0, column=2, padx=5)
+            ctk.CTkLabel(
+                row,
+                text=item["interface"],
+                width=120
+            ).grid(row=0, column=2, padx=5)
 
-                ctk.CTkButton(
-                    row,
-                    text="Eliminar",
-                    width=90,
-                    command=lambda ip=item["ip"]: self.delete_ip(ip)).grid(row=0, column=3, padx=5)
-
-        else:
-            print("Error cargando IPs:", ip_values)
+            ctk.CTkButton(
+                row,
+                text="Eliminar",
+                width=90,
+                command=lambda ip=item["ip"]: self.delete_ip(ip)
+            ).grid(row=0, column=3, padx=5)
     
-    def create_ip(self,ip, interface):
+    def create_ip(self, ip, interface):
         success, message = self.controller.create_ip(ip, interface)
         self.show_message(message)
+
+        if success:
+            self.load_ips()
     
     def delete_ip(self, ip):
         success, message = self.controller.delete_ip(ip)
         self.show_message(message)
+
+        if success:
+            self.load_ips()
