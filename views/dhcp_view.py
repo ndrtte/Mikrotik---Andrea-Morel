@@ -143,7 +143,7 @@ class DhcpView(ctk.CTkFrame):
         self.disabled_combobox = ctk.CTkComboBox(server_card, values=self.disabled_options)
         self.disabled_combobox.grid(row=8, column=0, sticky="ew", padx=20, pady=(2, 15))
 
-        self.create_server_button = ctk.CTkButton(server_card, text="Crear Servidor DHCP")
+        self.create_server_button = ctk.CTkButton(server_card, text="Crear Servidor DHCP", command= lambda : self.create_dhcp_server())
         self.create_server_button.grid(row=9, column=0, sticky="ew", padx=20, pady=(0, 20))
 
     def build_right_column(self):
@@ -251,6 +251,15 @@ class DhcpView(ctk.CTkFrame):
         dns_ip = self.dns_server_entry.get()
         success, message = self.controller.create_dhcp_network(dhcp_address, dhcp_gateway, dns_ip)
         self.show_message(message)
+
+    
+    def create_dhcp_server(self):
+        server_name = self.server_name_entry.get()
+        interface = self.interface_combobox.get()
+        pool = self.address_pool_combobox.get()
+        disabled = self.disabled_combobox.get()
+        
+        success, message = self.controller.create_dhcp_server(server_name, interface, pool, disabled)
         
         if success:
             self.load_server_list()

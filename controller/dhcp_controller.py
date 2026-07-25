@@ -39,3 +39,22 @@ class DhcpController:
             return False, f"Ocurrió un error al crear la red DHCP: {str(e)}"
         
         
+    def create_dhcp_server(self,dhcp_name, dhcp_interface, pool_name, status):
+        
+        dhcp_api = self.session.api.path("ip","dhcp-server")
+        
+        if not dhcp_name or not dhcp_interface or not pool_name or not status:
+            return False, "Completa todos los campos"
+        
+        try:
+            dhcp_api.add(**{
+                "name": dhcp_name,
+                "interface" : dhcp_interface,
+                "address-pool" : pool_name,
+                "disabled" : status
+            })
+            return True, "Servidor DHCP creado correctamente."
+            
+        except Exception as e:
+            print(e)
+            return False, f"Ocurrió un error al crear el servidor DHCP: {str(e)}"
