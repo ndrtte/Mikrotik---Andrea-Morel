@@ -13,6 +13,7 @@ from services.router_session_service import RouterSession
 from controller.connect_controller import ConnectController
 from controller.router_name_controller import RouterNameController
 from controller.ip_controller import IpController
+from controller.dhcp_controller import DhcpController
 
 from components.notifications import Notification
 
@@ -34,6 +35,7 @@ class Application(ctk.CTk):
         
         self.ip_controller = IpController(self.session)
 
+        self.dhcp_controller = DhcpController(self.session)
         
         self.view_container = ctk.CTkFrame(self)
         self.view_container.pack(
@@ -83,7 +85,9 @@ class Application(ctk.CTk):
                 self.show_message
             ),
             "dhcp": lambda: DhcpView(
-                self.dashboard.view_container
+                self.dashboard.view_container,
+                self.dhcp_controller,
+                self.show_message
             )
         }
         
