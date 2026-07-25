@@ -6,8 +6,8 @@ class RouterNameController:
 
     def get_router_identity(self):
         try:
-            resource = self.session.api.path("/system/identity")
-            data = list(resource)
+            identity = self.session.api.path("/system/identity")
+            data = list(identity)
 
             return data[0]["name"]
 
