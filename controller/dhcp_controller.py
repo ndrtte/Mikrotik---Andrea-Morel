@@ -19,3 +19,23 @@ class DhcpController:
             
         return servers_list
     
+    def create_dhcp_network(self, dhcp_address, dhcp_gateway, dns_ip):
+        dhcp_network_api = self.session.api.path("ip", "dhcp-server", "network")
+
+        if not dhcp_address or not dhcp_gateway or not dns_ip:
+            return False, "Completa todos los campos."
+
+        try:
+            dhcp_network_api.add(**{
+                "address": dhcp_address,
+                "gateway": dhcp_gateway,
+                "dns-server": dns_ip
+            })
+
+            return True, "Red DHCP creada correctamente."
+
+        except Exception as e:
+            print(e)
+            return False, f"Ocurrió un error al crear la red DHCP: {str(e)}"
+        
+        

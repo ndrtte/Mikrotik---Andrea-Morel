@@ -16,7 +16,7 @@ class PoolAddressUtil:
                 
             return True, "Se ha creado el pool correctamente"
         except Exception as e:
-            False, f"Hay un error de insercion: {e}"
+            False, f"Hay un error de insercion: {str(e)}"
     
     def get_pool(self):        
         try:

@@ -91,7 +91,7 @@ class DhcpView(ctk.CTkFrame):
         self.dns_server_entry = ctk.CTkEntry(network_card, placeholder_text="8.8.8.8")
         self.dns_server_entry.grid(row=6, column=0, sticky="ew", padx=20, pady=(2, 15))
 
-        self.create_network_button = ctk.CTkButton(network_card, text="Crear Network")
+        self.create_network_button = ctk.CTkButton(network_card, text="Crear Network", command= lambda: self.create_dhcp_network())
         self.create_network_button.grid(row=7, column=0, sticky="ew", padx=20, pady=(0, 20))
 
     def build_server_card(self, parent):
@@ -244,4 +244,13 @@ class DhcpView(ctk.CTkFrame):
             self.address_pool_combobox.configure(values=address_pools)
             if address_pools:
                 self.address_pool_combobox.set(address_pools[0])
-            
+    
+    def create_dhcp_network(self):
+        dhcp_address = self.network_address_entry.get()
+        dhcp_gateway = self.gateway_entry.get()
+        dns_ip = self.dns_server_entry.get()
+        success, message = self.controller.create_dhcp_network(dhcp_address, dhcp_gateway, dns_ip)
+        self.show_message(message)
+        
+        if success:
+            self.load_server_list()
