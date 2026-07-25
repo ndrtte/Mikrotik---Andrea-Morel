@@ -19,18 +19,3 @@ class DhcpController:
             
         return servers_list
     
-    def create_ip_pool(self, pool_name, pool_ranges):
-        pool_api = self.session.api.path("ip","pool")
-        
-        if not pool_name or not pool_ranges :
-            return False, "Ingresa todos los campos"
-        
-        try:
-            pool_api.add(
-                name = pool_name,
-                ranges = pool_ranges
-            )
-            
-            return True, "Se ha creado el pool correctamente"
-        except Exception as e:
-            False, f"Hay un error de insercion: {e}"

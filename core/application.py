@@ -18,6 +18,7 @@ from controller.dhcp_controller import DhcpController
 from components.notifications import Notification
 
 from util.interface_util import InterfaceUtil
+from util.pool_address_util import PoolAddressUtil
 
 class Application(ctk.CTk):
 
@@ -38,6 +39,8 @@ class Application(ctk.CTk):
         self.dhcp_controller = DhcpController(self.session)
         
         self.interface_util = InterfaceUtil(self.session)
+        
+        self.pool_address_util = PoolAddressUtil(self.session)
         
         self.view_container = ctk.CTkFrame(self)
         self.view_container.pack(
@@ -91,7 +94,8 @@ class Application(ctk.CTk):
                 self.dashboard.view_container,
                 self.dhcp_controller,
                 self.show_message,
-                self.interface_util
+                self.interface_util,
+                self.pool_address_util
             )
         }
         

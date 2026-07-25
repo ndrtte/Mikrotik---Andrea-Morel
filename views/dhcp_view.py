@@ -4,12 +4,13 @@ import customtkinter as ctk
 
 
 class DhcpView(ctk.CTkFrame):
-    def __init__(self, parent, controller, show_message, interface_util):
+    def __init__(self, parent, controller, show_message, interface_util, pool_address):
         super().__init__(parent)
 
         self.controller = controller
         self.show_message = show_message
         self.interface_util = interface_util
+        self.pool_address = pool_address
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=2)
@@ -21,7 +22,6 @@ class DhcpView(ctk.CTkFrame):
         self.small_font = ctk.CTkFont(size=12)
         self.small_bold_font = ctk.CTkFont(size=12, weight="bold")
 
-        self.address_pools = ["pool_lan", "pool_guest", "pool_office"]
         self.disabled_options = ["no", "yes"]
 
         self.selected_server = ctk.StringVar(value="")
@@ -121,9 +121,22 @@ class DhcpView(ctk.CTkFrame):
         ctk.CTkLabel(server_card, text="Pool de direcciones", font=self.label_font).grid(
             row=5, column=0, sticky="w", padx=20
         )
-        self.address_pool_combobox = ctk.CTkComboBox(server_card, values=self.address_pools)
-        self.address_pool_combobox.grid(row=6, column=0, sticky="ew", padx=20, pady=(2, 10))
+        
+        self.address_pool_combobox = ctk.CTkComboBox(
+            server_card,
+            values=[]
+        )
 
+        self.address_pool_combobox.grid(
+            row=6,
+            column=0,
+            sticky="ew",
+            padx=20,
+            pady=(2, 10)
+        )
+
+        self.load_pool()
+        
         ctk.CTkLabel(server_card, text="Deshabilitado", font=self.label_font).grid(
             row=7, column=0, sticky="w", padx=20
         )
@@ -214,9 +227,21 @@ class DhcpView(ctk.CTkFrame):
     def create_pool(self):
         pool_name = self.pool_name_entry.get()
         pool_ranges = self.pool_range_entry.get()
-        success, messages = self.controller.create_ip_pool(pool_name, pool_ranges)
-        
-        self.show_message(messages)
-        
+
+        success, message = self.pool_address.create_ip_pool(
+            pool_name,
+            pool_ranges
+        )
+
+        self.show_message(message)
+
         if success:
-            self.load_server_list()
+            self.load_pool()
+    
+    def load_pool(self):
+        success, address_pools = self.pool_address.get_pool()
+        if success:
+            self.address_pool_combobox.configure(values=address_pools)
+            if address_pools:
+                self.address_pool_combobox.set(address_pools[0])
+            
