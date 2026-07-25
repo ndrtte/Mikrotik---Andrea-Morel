@@ -1,6 +1,6 @@
 class IpController:
     def __init__(self, session):
-            self.session = session
+        self.session = session
     
     def get_all_interfaces(self):
         try:

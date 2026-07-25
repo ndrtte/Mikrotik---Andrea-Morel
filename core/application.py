@@ -1,10 +1,12 @@
 import customtkinter as ctk
 
 from config import APP_NAME, WINDOW_HEIGHT, WINDOW_WIDTH
+
 from views.connection_view import ConnectionView
 from views.dashboard_view import RouterDashboardView
 from views.router_name_view import RouterNameView
 from views.ip_view import IpView
+from views.dhcp_view import DhcpView
 
 from services.router_session_service import RouterSession
 
@@ -79,6 +81,9 @@ class Application(ctk.CTk):
                 self.dashboard.view_container,
                 self.ip_controller,
                 self.show_message
+            ),
+            "dhcp": lambda: DhcpView(
+                self.dashboard.view_container
             )
         }
         
