@@ -1,11 +1,11 @@
 import customtkinter as ctk
 
-
 class IpView(ctk.CTkFrame):
     def __init__(self, parent, controller, show_message):
         super().__init__(parent)
         
         self.controller = controller
+        self.show_message = show_message
         
         title = ctk.CTkLabel(
             self,
@@ -108,8 +108,13 @@ class IpView(ctk.CTkFrame):
                 ctk.CTkButton(
                     row,
                     text="Eliminar",
-                    width=90
-                ).grid(row=0, column=3, padx=5)
+                    width=90,
+                    command=lambda ip=item["ip"]: self.delete_ip(ip)).grid(row=0, column=3, padx=5)
 
         else:
             print("Error cargando IPs:", ip_values)
+    
+    
+    def delete_ip(self, ip):
+        success, message = self.controller.delete_ip(ip)
+        self.show_message(message)

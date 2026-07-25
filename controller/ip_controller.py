@@ -35,3 +35,23 @@ class IpController:
 
         except Exception as e:
             return False, str(e)
+    
+    def delete_ip(self, ip):
+        try:
+            ip_api = self.session.api.path("ip", "address")
+            record_id = None
+
+            for record in ip_api:
+                if record.get("address") == ip:
+                    record_id = record.get(".id")
+                    break
+
+            if record_id is None:
+                return False, f"No se encontró la IP {ip}"
+
+            ip_api.remove(record_id)
+
+            return True, f"Se eliminó con éxito la IP {ip}"
+
+        except Exception as e:
+            return False, str(e)
