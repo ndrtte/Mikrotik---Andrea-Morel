@@ -24,13 +24,6 @@ class DhcpView(ctk.CTkFrame):
         self.address_pools = ["pool_lan", "pool_guest", "pool_office"]
         self.disabled_options = ["no", "yes"]
 
-        self.dhcp_servers = [
-            {"name": "dhcp_lan", "interface": "ether2", "pool": "pool_lan", "status": "Activo"},
-            {"name": "dhcp_guest", "interface": "wlan1", "pool": "pool_guest", "status": "Activo"},
-            {"name": "dhcp_office", "interface": "ether3", "pool": "pool_office", "status": "Inactivo"},
-            {"name": "dhcp_iot", "interface": "ether1", "pool": "pool_office", "status": "Activo"},
-        ]
-
         self.selected_server = ctk.StringVar(value="")
 
         self.build_left_column()
@@ -151,7 +144,7 @@ class DhcpView(ctk.CTkFrame):
         self.server_list_frame.grid(row=1, column=0, sticky="nsew", padx=15, pady=(0, 10))
         self.server_list_frame.grid_columnconfigure(0, weight=1)
 
-        self.populate_server_list()
+        self.load_server_list()
 
         self.delete_selected_button = ctk.CTkButton(
             right_frame,
@@ -161,8 +154,13 @@ class DhcpView(ctk.CTkFrame):
         )
         self.delete_selected_button.grid(row=2, column=0, sticky="ew", padx=20, pady=(0, 20))
 
-    def populate_server_list(self):
-        for index, server in enumerate(self.dhcp_servers):
+    def load_server_list(self):
+        for widget in self.server_list_frame.winfo_children():
+            widget.destroy()
+        
+        servers = self.controller.get_all_dhcp_servers()
+
+        for index, server in enumerate(servers):
             self.build_server_item(index, server)
 
     def build_server_item(self, index, server):
@@ -170,7 +168,8 @@ class DhcpView(ctk.CTkFrame):
         item_frame.grid(row=index, column=0, sticky="ew", pady=6, padx=4)
         item_frame.grid_columnconfigure(1, weight=1)
 
-        status_color = "#2ecc71" if server["status"] == "Activo" else "#e74c3c"
+        status = "Activo" if not server["status"] else "Deshabilitado"
+        status_color = "#2ecc71" if not server["status"] else "#e74c3c"
 
         radio_button = ctk.CTkRadioButton(
             item_frame,
@@ -203,8 +202,10 @@ class DhcpView(ctk.CTkFrame):
 
         ctk.CTkLabel(
             item_frame,
-            text=server["status"],
+            text=status,
             font=self.small_bold_font,
             text_color=status_color,
             anchor="w",
         ).grid(row=3, column=1, sticky="w", padx=(0, 15), pady=(2, 15))
+    
+        
