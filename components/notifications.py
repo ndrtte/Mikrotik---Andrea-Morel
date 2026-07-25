@@ -20,7 +20,8 @@ class Notification(ctk.CTkFrame):
             side="bottom",
             fill="x"
         )
-
+        self.after(5000, lambda: self.hide())
+        
 
     def hide(self):
-        self.pack_forget()
+        self.destroy()
