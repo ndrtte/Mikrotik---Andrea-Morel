@@ -1,5 +1,7 @@
 import customtkinter as ctk
 
+import customtkinter as ctk
+
 
 class DhcpView(ctk.CTkFrame):
     def __init__(self, parent, controller, show_message):
@@ -9,77 +11,200 @@ class DhcpView(ctk.CTkFrame):
         self.show_message = show_message
 
         self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(2, weight=1)
+        self.grid_columnconfigure(1, weight=2)
+        self.grid_rowconfigure(0, weight=1)
 
-        self.title = ctk.CTkLabel(
-            self,
-            text="Administración de DHCP",
-            font=ctk.CTkFont(size=24, weight="bold")
-        )
-        self.title.grid(row=0, column=0, pady=(20, 5))
+        self.title_font = ctk.CTkFont(size=20, weight="bold")
+        self.card_title_font = ctk.CTkFont(size=16, weight="bold")
+        self.label_font = ctk.CTkFont(size=13)
+        self.small_font = ctk.CTkFont(size=12)
+        self.small_bold_font = ctk.CTkFont(size=12, weight="bold")
 
-        self.subtitle = ctk.CTkLabel(
-            self,
-            text="Visualiza, crea y elimina servidores DHCP.",
-            text_color="gray"
-        )
-        self.subtitle.grid(row=1, column=0, pady=(0, 15))
+        self.interfaces = ["ether1", "ether2", "ether3", "wlan1"]
+        self.address_pools = ["pool_lan", "pool_guest", "pool_office"]
+        self.disabled_options = ["no", "yes"]
 
-        self.table = ctk.CTkFrame(self)
-        self.table.grid(row=2, column=0, padx=20, sticky="nsew")
-
-        headers = [
-            "Nombre",
-            "Interfaz",
-            "Pool",
-            "Gateway",
-            "Estado"
+        self.dhcp_servers = [
+            {"name": "dhcp_lan", "interface": "ether2", "pool": "pool_lan", "status": "Activo"},
+            {"name": "dhcp_guest", "interface": "wlan1", "pool": "pool_guest", "status": "Activo"},
+            {"name": "dhcp_office", "interface": "ether3", "pool": "pool_office", "status": "Inactivo"},
+            {"name": "dhcp_iot", "interface": "ether1", "pool": "pool_office", "status": "Activo"},
         ]
 
-        for col, text in enumerate(headers):
-            lbl = ctk.CTkLabel(
-                self.table,
-                text=text,
-                font=ctk.CTkFont(weight="bold")
-            )
-            lbl.grid(row=0, column=col, padx=10, pady=10)
+        self.selected_server = ctk.StringVar(value="")
 
+        self.build_left_column()
+        self.build_right_column()
 
-        fake_data = [
-            ("DHCP-LAN", "ether2", "Pool-LAN", "192.168.1.1", "Activo"),
-            ("DHCP-WIFI", "wlan1", "Pool-WIFI", "192.168.10.1", "Activo"),
-            ("Invitados", "bridge", "Pool-Guest", "10.10.10.1", "Deshabilitado")
-        ]
+    def build_left_column(self):
+        left_frame = ctk.CTkScrollableFrame(self, fg_color="transparent")
+        left_frame.grid(row=0, column=0, sticky="nsew", padx=(20, 10), pady=20)
+        left_frame.grid_columnconfigure(0, weight=1)
 
-        self.selected = ctk.StringVar(value="")
+        self.build_pool_card(left_frame)
+        self.build_network_card(left_frame)
+        self.build_server_card(left_frame)
 
-        for row, item in enumerate(fake_data, start=1):
-            radio = ctk.CTkRadioButton(
-                self.table,
-                text=item[0],
-                variable=self.selected,
-                value=item[0]
-            )
-            radio.grid(row=row, column=0, padx=10, pady=8, sticky="w")
+    def build_pool_card(self, parent):
+        pool_card = ctk.CTkFrame(parent, corner_radius=12)
+        pool_card.grid(row=0, column=0, sticky="ew", pady=(0, 15))
+        pool_card.grid_columnconfigure(0, weight=1)
 
-            ctk.CTkLabel(self.table, text=item[1]).grid(row=row, column=1, padx=10)
-            ctk.CTkLabel(self.table, text=item[2]).grid(row=row, column=2, padx=10)
-            ctk.CTkLabel(self.table, text=item[3]).grid(row=row, column=3, padx=10)
-            ctk.CTkLabel(self.table, text=item[4]).grid(row=row, column=4, padx=10)
-
-        self.buttons = ctk.CTkFrame(self, fg_color="transparent")
-        self.buttons.grid(row=3, column=0, pady=20)
-
-        self.create_btn = ctk.CTkButton(
-            self.buttons,
-            text="Crear DHCP",
-            width=150
+        ctk.CTkLabel(pool_card, text="IP Pool", font=self.card_title_font).grid(
+            row=0, column=0, sticky="w", padx=20, pady=(15, 10)
         )
-        self.create_btn.grid(row=0, column=0, padx=10)
 
-        self.delete_btn = ctk.CTkButton(
-            self.buttons,
-            text="Eliminar DHCP",
-            width=150
+        ctk.CTkLabel(pool_card, text="Nombre del Pool", font=self.label_font).grid(
+            row=1, column=0, sticky="w", padx=20
         )
-        self.delete_btn.grid(row=0, column=1, padx=10)
+        self.pool_name_entry = ctk.CTkEntry(pool_card, placeholder_text="pool_lan")
+        self.pool_name_entry.grid(row=2, column=0, sticky="ew", padx=20, pady=(2, 10))
+
+        ctk.CTkLabel(pool_card, text="Rango de direcciones", font=self.label_font).grid(
+            row=3, column=0, sticky="w", padx=20
+        )
+        self.pool_range_entry = ctk.CTkEntry(
+            pool_card, placeholder_text="192.168.1.100-192.168.1.200"
+        )
+        self.pool_range_entry.grid(row=4, column=0, sticky="ew", padx=20, pady=(2, 15))
+
+        self.create_pool_button = ctk.CTkButton(pool_card, text="Crear Pool")
+        self.create_pool_button.grid(row=5, column=0, sticky="ew", padx=20, pady=(0, 20))
+
+    def build_network_card(self, parent):
+        network_card = ctk.CTkFrame(parent, corner_radius=12)
+        network_card.grid(row=1, column=0, sticky="ew", pady=(0, 15))
+        network_card.grid_columnconfigure(0, weight=1)
+
+        ctk.CTkLabel(network_card, text="Red DHCP", font=self.card_title_font).grid(
+            row=0, column=0, sticky="w", padx=20, pady=(15, 10)
+        )
+
+        ctk.CTkLabel(network_card, text="Red", font=self.label_font).grid(
+            row=1, column=0, sticky="w", padx=20
+        )
+        self.network_address_entry = ctk.CTkEntry(network_card, placeholder_text="192.168.1.0/24")
+        self.network_address_entry.grid(row=2, column=0, sticky="ew", padx=20, pady=(2, 10))
+
+        ctk.CTkLabel(network_card, text="Gateway", font=self.label_font).grid(
+            row=3, column=0, sticky="w", padx=20
+        )
+        self.gateway_entry = ctk.CTkEntry(network_card, placeholder_text="192.168.1.1")
+        self.gateway_entry.grid(row=4, column=0, sticky="ew", padx=20, pady=(2, 10))
+
+        ctk.CTkLabel(network_card, text="DNS Server", font=self.label_font).grid(
+            row=5, column=0, sticky="w", padx=20
+        )
+        self.dns_server_entry = ctk.CTkEntry(network_card, placeholder_text="8.8.8.8")
+        self.dns_server_entry.grid(row=6, column=0, sticky="ew", padx=20, pady=(2, 15))
+
+        self.create_network_button = ctk.CTkButton(network_card, text="Crear Network")
+        self.create_network_button.grid(row=7, column=0, sticky="ew", padx=20, pady=(0, 20))
+
+    def build_server_card(self, parent):
+        server_card = ctk.CTkFrame(parent, corner_radius=12)
+        server_card.grid(row=2, column=0, sticky="ew")
+        server_card.grid_columnconfigure(0, weight=1)
+
+        ctk.CTkLabel(server_card, text="DHCP Server", font=self.card_title_font).grid(
+            row=0, column=0, sticky="w", padx=20, pady=(15, 10)
+        )
+
+        ctk.CTkLabel(server_card, text="Nombre", font=self.label_font).grid(
+            row=1, column=0, sticky="w", padx=20
+        )
+        self.server_name_entry = ctk.CTkEntry(server_card, placeholder_text="dhcp_lan")
+        self.server_name_entry.grid(row=2, column=0, sticky="ew", padx=20, pady=(2, 10))
+
+        ctk.CTkLabel(server_card, text="Interfaz", font=self.label_font).grid(
+            row=3, column=0, sticky="w", padx=20
+        )
+        self.interface_combobox = ctk.CTkComboBox(server_card, values=self.interfaces)
+        self.interface_combobox.grid(row=4, column=0, sticky="ew", padx=20, pady=(2, 10))
+
+        ctk.CTkLabel(server_card, text="Pool de direcciones", font=self.label_font).grid(
+            row=5, column=0, sticky="w", padx=20
+        )
+        self.address_pool_combobox = ctk.CTkComboBox(server_card, values=self.address_pools)
+        self.address_pool_combobox.grid(row=6, column=0, sticky="ew", padx=20, pady=(2, 10))
+
+        ctk.CTkLabel(server_card, text="Deshabilitado", font=self.label_font).grid(
+            row=7, column=0, sticky="w", padx=20
+        )
+        self.disabled_combobox = ctk.CTkComboBox(server_card, values=self.disabled_options)
+        self.disabled_combobox.grid(row=8, column=0, sticky="ew", padx=20, pady=(2, 15))
+
+        self.create_server_button = ctk.CTkButton(server_card, text="Crear Servidor DHCP")
+        self.create_server_button.grid(row=9, column=0, sticky="ew", padx=20, pady=(0, 20))
+
+    def build_right_column(self):
+        right_frame = ctk.CTkFrame(self, corner_radius=12)
+        right_frame.grid(row=0, column=1, sticky="nsew", padx=(10, 20), pady=20)
+        right_frame.grid_columnconfigure(0, weight=1)
+        right_frame.grid_rowconfigure(1, weight=1)
+
+        ctk.CTkLabel(right_frame, text="Servidores DHCP", font=self.card_title_font).grid(
+            row=0, column=0, sticky="w", padx=20, pady=(15, 10)
+        )
+
+        self.server_list_frame = ctk.CTkScrollableFrame(right_frame, fg_color="transparent")
+        self.server_list_frame.grid(row=1, column=0, sticky="nsew", padx=15, pady=(0, 10))
+        self.server_list_frame.grid_columnconfigure(0, weight=1)
+
+        self.populate_server_list()
+
+        self.delete_selected_button = ctk.CTkButton(
+            right_frame,
+            text="Eliminar seleccionado",
+            fg_color="#c0392b",
+            hover_color="#922b21",
+        )
+        self.delete_selected_button.grid(row=2, column=0, sticky="ew", padx=20, pady=(0, 20))
+
+    def populate_server_list(self):
+        for index, server in enumerate(self.dhcp_servers):
+            self.build_server_item(index, server)
+
+    def build_server_item(self, index, server):
+        item_frame = ctk.CTkFrame(self.server_list_frame, corner_radius=10)
+        item_frame.grid(row=index, column=0, sticky="ew", pady=6, padx=4)
+        item_frame.grid_columnconfigure(1, weight=1)
+
+        status_color = "#2ecc71" if server["status"] == "Activo" else "#e74c3c"
+
+        radio_button = ctk.CTkRadioButton(
+            item_frame,
+            text="",
+            variable=self.selected_server,
+            value=server["name"],
+            width=20,
+        )
+        radio_button.grid(row=0, column=0, rowspan=4, padx=(15, 10), pady=15)
+
+        ctk.CTkLabel(
+            item_frame, text=server["name"], font=self.label_font, anchor="w"
+        ).grid(row=0, column=1, sticky="w", padx=(0, 15), pady=(15, 2))
+
+        ctk.CTkLabel(
+            item_frame,
+            text=f"Interfaz: {server['interface']}",
+            font=self.small_font,
+            text_color="gray70",
+            anchor="w",
+        ).grid(row=1, column=1, sticky="w", padx=(0, 15))
+
+        ctk.CTkLabel(
+            item_frame,
+            text=f"Pool de direcciones: {server['pool']}",
+            font=self.small_font,
+            text_color="gray70",
+            anchor="w",
+        ).grid(row=2, column=1, sticky="w", padx=(0, 15))
+
+        ctk.CTkLabel(
+            item_frame,
+            text=server["status"],
+            font=self.small_bold_font,
+            text_color=status_color,
+            anchor="w",
+        ).grid(row=3, column=1, sticky="w", padx=(0, 15), pady=(2, 15))
