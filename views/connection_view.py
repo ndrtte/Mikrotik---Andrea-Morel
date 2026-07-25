@@ -1,10 +1,11 @@
 import customtkinter as ctk
 
 class ConnectionView(ctk.CTkFrame):
-    def __init__(self, parent, controller, on_success):
+    def __init__(self, parent, controller, on_success, show_message):
 
         self.controller = controller
         self.on_success = on_success
+        self.show_message = show_message
         super().__init__(parent, fg_color="transparent")
 
         self.grid_rowconfigure(0, weight=1)
@@ -72,17 +73,14 @@ class ConnectionView(ctk.CTkFrame):
         user = self.user_entry.get()
         password = self.password_entry.get()
 
-        success, result = self.controller.connect_router(
+        success, message = self.controller.connect_router(
             ip,
             user,
             password
         )
         if success:
-            print("Conectado correctamente")
-            print(result)
+            self.show_message(message)
             self.on_success()
 
         else:
-            print("Error de conexión:")
-            print(result)
-        
+            self.show_message(message)

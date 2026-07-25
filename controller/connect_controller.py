@@ -14,10 +14,9 @@ class ConnectController:
 
             self.session.set_connection(api)
 
-            resource = api.path("/system/resource")
-            info = list(resource)
-
-            return True, info[0]
+            return True, "Conexión exitosa con el router"
 
         except Exception as e:
-            return False, str(e)
+            print(f"Error de conexión: {e}")
+
+            return False, "No se pudo conectar con el router"

@@ -42,7 +42,8 @@ class Application(ctk.CTk):
         connection = ConnectionView(
             self.view_container,
             self.connect_controller,
-            self.show_dashboard
+            self.show_dashboard,
+            self.show_message
         )
 
         connection.pack(fill="both", expand=True)
