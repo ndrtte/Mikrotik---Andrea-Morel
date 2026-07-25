@@ -52,7 +52,8 @@ class Application(ctk.CTk):
 
         dashboard = RouterDashboardView(
             self.view_container,
-            self.router_controller
+            self.router_controller,
+            self.show_message
         )
 
         dashboard.pack(fill="both", expand=True)

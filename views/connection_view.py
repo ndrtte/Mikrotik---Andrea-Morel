@@ -1,5 +1,4 @@
 import customtkinter as ctk
-from controller.connect_controller import ConnectController
 
 class ConnectionView(ctk.CTkFrame):
     def __init__(self, parent, controller, on_success):

@@ -14,9 +14,12 @@ class RouterNameController:
         except Exception as e:
             print(e)
             return "Nombre vacio"
-
+        
 
     def update_router_name(self, new_name):
+        if not new_name:
+            return False, "Ingresa un nombre valido"
+        
         try:
             identity = self.session.api.path("system", "identity")
 

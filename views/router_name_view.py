@@ -1,13 +1,13 @@
 import customtkinter as ctk 
-from controller.router_name_controller import RouterNameController
 
 class RouterNameView(ctk.CTkFrame):
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller, show_message):
             super().__init__(parent)
             self.controller = controller
             self.app = parent.master
+            self.show_message = show_message
 
-            print("Se muestra en pantalla")
+            print("Pantalla de nombre de router")
 
             self.title = ctk.CTkLabel(
                 self,
@@ -69,7 +69,7 @@ class RouterNameView(ctk.CTkFrame):
             new_name
         )
 
-        print(message)
+        self.show_message(message)
 
         
         
