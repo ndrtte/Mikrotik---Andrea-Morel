@@ -61,7 +61,7 @@ class DhcpView(ctk.CTkFrame):
         )
         self.pool_range_entry.grid(row=4, column=0, sticky="ew", padx=20, pady=(2, 15))
 
-        self.create_pool_button = ctk.CTkButton(pool_card, text="Crear Pool")
+        self.create_pool_button = ctk.CTkButton(pool_card, text="Crear Pool", command= lambda : self.create_pool())
         self.create_pool_button.grid(row=5, column=0, sticky="ew", padx=20, pady=(0, 20))
 
     def build_network_card(self, parent):
@@ -208,4 +208,12 @@ class DhcpView(ctk.CTkFrame):
             anchor="w",
         ).grid(row=3, column=1, sticky="w", padx=(0, 15), pady=(2, 15))
     
+    def create_pool(self):
+        pool_name = self.pool_name_entry.get()
+        pool_ranges = self.pool_range_entry.get()
+        success, messages = self.controller.create_ip_pool(pool_name, pool_ranges)
         
+        self.show_message(messages)
+        
+        if success:
+            self.load_server_list()
