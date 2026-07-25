@@ -24,15 +24,15 @@ class RouterNameView(ctk.CTkFrame):
             
             self.subtitle.pack(pady=5)
             
-            router_name = self.controller.get_router_identity()
-            
             self.router_name = ctk.CTkLabel(
                 self,
-                text=f"{router_name}",
-                font= ctk.CTkFont(size=14)
+                text="",
+                font=ctk.CTkFont(size=14)
             )
 
             self.router_name.pack()
+
+            self.load_router_name()
 
             self.description = ctk.CTkLabel(
                 self,
@@ -61,15 +61,17 @@ class RouterNameView(ctk.CTkFrame):
             )
             self.status_label.pack()
     
+    def load_router_name(self):
+        router_name = self.controller.get_router_identity()
+        self.router_name.configure(text=router_name)
+    
     def save_new_router_name(self):
-
         new_name = self.router_name_entry.get()
-
-        success, message = self.controller.update_router_name(
-            new_name
-        )
-
+        success, message = self.controller.update_router_name(new_name)
         self.show_message(message)
+
+        if success:
+            self.load_router_name()
 
         
         
