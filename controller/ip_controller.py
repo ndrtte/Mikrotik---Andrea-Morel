@@ -36,6 +36,15 @@ class IpController:
         except Exception as e:
             return False, str(e)
     
+    def create_ip(self, ip, target_interface):
+        try:
+            ip_api = self.session.api.path("ip", "address")
+            ip_api.add(address=ip, interface = target_interface)
+            
+            return True, "Se agrego la ip con exito"
+        except Exception as e:
+            return False, str(e)   
+    
     def delete_ip(self, ip):
         try:
             ip_api = self.session.api.path("ip", "address")

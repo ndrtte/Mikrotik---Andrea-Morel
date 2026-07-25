@@ -40,19 +40,30 @@ class IpView(ctk.CTkFrame):
         
         
         success, interfaces_values = self.controller.get_all_interfaces()
-        
-        if(success):
+
+        if success:
             self.interface_combo = ctk.CTkComboBox(
                 form,
-                values=interfaces_values)
+                values=interfaces_values
+            )
+
+            self.interface_combo.grid(
+                row=1,
+                column=1,
+                padx=10
+            )
+
         else:
-             print("Error cargando interfaces:", interfaces_values)
+            self.show_message(
+                f"Error cargando interfaces: {interfaces_values}"
+            )
         
         self.interface_combo.grid(row=1, column=1, padx=10)
 
         self.add_button = ctk.CTkButton(
             form,
-            text="Agregar IP"
+            text="Agregar IP",
+            command= lambda: self.create_ip( self.ip_entry.get(),self.interface_combo.get())
         )
         self.add_button.grid(
             row=1,
@@ -114,6 +125,9 @@ class IpView(ctk.CTkFrame):
         else:
             print("Error cargando IPs:", ip_values)
     
+    def create_ip(self,ip, interface):
+        success, message = self.controller.create_ip(ip, interface)
+        self.show_message(message)
     
     def delete_ip(self, ip):
         success, message = self.controller.delete_ip(ip)
