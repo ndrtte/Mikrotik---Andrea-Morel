@@ -1,12 +1,12 @@
 import customtkinter as ctk
 from views.router_name_view import RouterNameView
+from views.ip_view import IpView
 
 class RouterDashboardView(ctk.CTkFrame):
-    def __init__(self, parent, router_controller, show_message):
+    def __init__(self, parent, navigate):
         super().__init__(parent)
-        self.router_controller = router_controller
-        self.show_message = show_message
-
+        self.navigate = navigate
+        
         self.grid(row=0, column=0, sticky="nsew")
 
         parent.grid_columnconfigure(0, weight=1)
@@ -28,20 +28,15 @@ class RouterDashboardView(ctk.CTkFrame):
         self.current_view = None
         
         self.views = {
-            "Asignar nombre a Router": RouterNameView,
-            #"Direcciones IP": IpView,
-            #"DHCP": DhcpView,
-            #"DNS": DnsView,
-            #"Rutas estáticas": StaticRoutesView,
-            #"Interfaces": InterfacesView,
-            #"Respaldo": BackupView
+            "Asignar nombre a Router": "router_name",
+            "Direcciones IP": "ip",
         }
 
         for item in self.views :
             ctk.CTkButton(
                 self.sidebar,
                 text=item,
-                command=lambda i=item: self.load_view(i)
+                command=lambda i=item: self.navigate(self.views[i])
             ).pack(pady=5, fill="x")
 
 
@@ -57,19 +52,12 @@ class RouterDashboardView(ctk.CTkFrame):
         self.view_container = ctk.CTkFrame(self.content)
         self.view_container.pack(fill="both", expand=True)
 
-    def load_view(self, option):
+    def load_view(self, view):
 
         self.content_label.pack_forget()
 
         if self.current_view:
             self.current_view.destroy()
 
-        view = self.views.get(option)
-
-        if view:
-            self.current_view = view(
-                self.view_container,
-                self.router_controller,
-                self.show_message
-            )
-            self.current_view.pack(fill="both", expand=True)
+        self.current_view = view
+        self.current_view.pack(fill="both", expand=True)
