@@ -17,4 +17,21 @@ class IpController:
         except Exception as e:
             return False, str(e)
         
-            
+    def get_all_ip(self):
+        
+        ip_list = []
+
+        try:
+            ip_api = self.session.api.path("ip", "address")
+
+            for ip in ip_api:
+                ip_list.append({
+                    "ip": ip.get("address"),
+                    "network": ip.get("network"),
+                    "interface": ip.get("interface")
+                })
+
+            return True, ip_list
+
+        except Exception as e:
+            return False, str(e)
