@@ -2,8 +2,9 @@ import customtkinter as ctk
 from views.router_name_view import RouterNameView
 
 class RouterDashboardView(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent,router_controller):
         super().__init__(parent)
+        self.router_controller = router_controller
 
         self.grid(row=0, column=0, sticky="nsew")
 
@@ -65,5 +66,5 @@ class RouterDashboardView(ctk.CTkFrame):
         view = self.views.get(option)
 
         if view:
-            self.current_view = view(self.view_container)
+            self.current_view = view(self.view_container, self.router_controller)
             self.current_view.pack(fill="both", expand=True)

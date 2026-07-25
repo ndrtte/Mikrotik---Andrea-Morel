@@ -1,9 +1,11 @@
 import customtkinter as ctk
-from controller.mikrotik_connection import MikroTikService
+from controller.connect_controller import ConnectController
 
 class ConnectionView(ctk.CTkFrame):
-    def __init__(self, parent):
-        self.router_service = MikroTikService()
+    def __init__(self, parent, controller, on_success):
+
+        self.controller = controller
+        self.on_success = on_success
         super().__init__(parent, fg_color="transparent")
 
         self.grid_rowconfigure(0, weight=1)
@@ -71,7 +73,7 @@ class ConnectionView(ctk.CTkFrame):
         user = self.user_entry.get()
         password = self.password_entry.get()
 
-        success, result = self.router_service.connect_router(
+        success, result = self.controller.connect_router(
             ip,
             user,
             password
@@ -79,7 +81,7 @@ class ConnectionView(ctk.CTkFrame):
         if success:
             print("Conectado correctamente")
             print(result)
-            self.master.show_dashboard()
+            self.on_success()
 
         else:
             print("Error de conexión:")
