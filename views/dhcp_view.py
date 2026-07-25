@@ -135,7 +135,7 @@ class DhcpView(ctk.CTkFrame):
             pady=(2, 10)
         )
 
-        self.load_pool()
+        self.refresh_pool_options()
         
         ctk.CTkLabel(server_card, text="Deshabilitado", font=self.label_font).grid(
             row=7, column=0, sticky="w", padx=20
@@ -236,9 +236,9 @@ class DhcpView(ctk.CTkFrame):
         self.show_message(message)
 
         if success:
-            self.load_pool()
+            self.refresh_pool_options()
     
-    def load_pool(self):
+    def refresh_pool_options(self):
         success, address_pools = self.pool_address.get_pool()
         if success:
             self.address_pool_combobox.configure(values=address_pools)
