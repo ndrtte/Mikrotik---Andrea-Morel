@@ -1,11 +1,12 @@
 import customtkinter as ctk
 
 class IpView(ctk.CTkFrame):
-    def __init__(self, parent, controller, show_message):
+    def __init__(self, parent, controller, show_message, interface_util):
         super().__init__(parent)
         
         self.controller = controller
         self.show_message = show_message
+        self.interface_util = interface_util
         
         title = ctk.CTkLabel(
             self,
@@ -39,7 +40,7 @@ class IpView(ctk.CTkFrame):
         )
         
         
-        success, interfaces_values = self.controller.get_all_interfaces()
+        success, interfaces_values = self.interface_util.get_all_interfaces()
 
         if success:
             self.interface_combo = ctk.CTkComboBox(

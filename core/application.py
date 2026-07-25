@@ -17,7 +17,7 @@ from controller.dhcp_controller import DhcpController
 
 from components.notifications import Notification
 
-
+from util.interface_util import InterfaceUtil
 
 class Application(ctk.CTk):
 
@@ -36,6 +36,8 @@ class Application(ctk.CTk):
         self.ip_controller = IpController(self.session)
 
         self.dhcp_controller = DhcpController(self.session)
+        
+        self.interface_util = InterfaceUtil(self.session)
         
         self.view_container = ctk.CTkFrame(self)
         self.view_container.pack(
@@ -82,7 +84,8 @@ class Application(ctk.CTk):
             "ip": lambda: IpView(
                 self.dashboard.view_container,
                 self.ip_controller,
-                self.show_message
+                self.show_message,
+                self.interface_util
             ),
             "dhcp": lambda: DhcpView(
                 self.dashboard.view_container,
