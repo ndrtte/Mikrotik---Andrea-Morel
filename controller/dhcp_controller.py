@@ -58,3 +58,19 @@ class DhcpController:
         except Exception as e:
             print(e)
             return False, f"Ocurrió un error al crear el servidor DHCP: {str(e)}"
+        
+    def delete_dhcp_server(self, name):
+        dhcp_api = self.session.api.path("ip", "dhcp-server")
+
+        try:
+            for server in dhcp_api:
+                if server["name"] == name:
+                    dhcp_api.remove(server[".id"])
+                    return True, "Servidor DHCP eliminado correctamente."
+
+            return False, "No se encontró el servidor DHCP."
+
+        except Exception as e:
+            print(e)
+            return False, f"Ocurrió un error al eliminar el servidor DHCP: {e}"
+        

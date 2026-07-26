@@ -167,6 +167,7 @@ class DhcpView(ctk.CTkFrame):
             text="Eliminar seleccionado",
             fg_color="#c0392b",
             hover_color="#922b21",
+            command=lambda: self.delete_dhcp_server()
         )
         self.delete_selected_button.grid(row=2, column=0, sticky="ew", padx=20, pady=(0, 20))
 
@@ -261,5 +262,20 @@ class DhcpView(ctk.CTkFrame):
         
         success, message = self.controller.create_dhcp_server(server_name, interface, pool, disabled)
         
+        self.show_message(message)
+        if success:
+            self.load_server_list()
+    
+    def delete_dhcp_server(self):
+        server_name = self.selected_server.get()
+
+        if not server_name:
+            self.show_message(["Seleccione un servidor DHCP."])
+            return
+
+        success, messages = self.controller.delete_dhcp_server(server_name)
+
+        self.show_message(messages)
+
         if success:
             self.load_server_list()
