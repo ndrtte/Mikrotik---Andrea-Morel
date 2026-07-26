@@ -67,8 +67,8 @@ class DnsView(ctk.CTkFrame):
         self.dns_info_scroll_frame.grid(row=1, column=0, sticky="nsew", padx=15, pady=(0, 10))
         self.dns_info_scroll_frame.grid_columnconfigure(0, weight=1)
 
-        self._build_dns_servers_card()
-        self._build_remote_requests_card()
+        self.build_dns_servers_card()
+        self.build_remote_requests_card()
 
         self.delete_dns_button = ctk.CTkButton(
             self.current_config_frame,
