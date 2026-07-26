@@ -15,6 +15,7 @@ from controller.connect_controller import ConnectController
 from controller.router_name_controller import RouterNameController
 from controller.ip_controller import IpController
 from controller.dhcp_controller import DhcpController
+from controller.dns_controller import DnsController
 
 from components.notifications import Notification
 
@@ -42,6 +43,8 @@ class Application(ctk.CTk):
         self.interface_util = InterfaceUtil(self.session)
         
         self.pool_address_util = PoolAddressUtil(self.session)
+        
+        self.dns_controller = DnsController(self.session)
         
         self.view_container = ctk.CTkFrame(self)
         self.view_container.pack(
@@ -100,7 +103,7 @@ class Application(ctk.CTk):
             ),
             "dns": lambda: DnsView (
                 self.dashboard.view_container,
-                self.router_name_controller,
+                self.dns_controller,
                 self.show_message
             )
         }

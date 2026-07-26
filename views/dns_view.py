@@ -17,9 +17,6 @@ class DnsView(ctk.CTkFrame):
         self.small_font = ctk.CTkFont(size=12)
         self.small_bold_font = ctk.CTkFont(size=12, weight="bold")
 
-        self.current_dns_servers = ["8.8.8.8", "1.1.1.1"]
-        self.current_allow_remote_requests = "Sí"
-
         self.build_left_column()
         self.build_right_column()
 
@@ -84,29 +81,76 @@ class DnsView(ctk.CTkFrame):
         servers_card.grid_columnconfigure(0, weight=1)
 
         ctk.CTkLabel(
-            servers_card, text="Servidor DNS:", font=self.small_bold_font, anchor="w"
+            servers_card, 
+            text="Servidor DNS:",
+            font=self.small_bold_font,
+            anchor="w"
         ).grid(row=0, column=0, sticky="w", padx=15, pady=(15, 5))
 
-        for index, server in enumerate(self.current_dns_servers):
+        dns_config = self.controller.get_dns_configuration()
+
+        row = 1
+
+        static_ip_title = ctk.CTkLabel(
+            servers_card,
+            text="IP estáticas",
+            font=self.small_bold_font
+        )
+        static_ip_title.grid(row=row, column=0, sticky="w", padx=15, pady=(5, 5))
+
+        row += 1
+
+        for server in dns_config["static_ips"]:
             ctk.CTkLabel(
-                servers_card, text=server, font=self.small_font, anchor="w", text_color="gray70"
-            ).grid(row=index + 1, column=0, sticky="w", padx=15, pady=(0, 5 if index < len(self.current_dns_servers) - 1 else 15))
+                servers_card,
+                text=server,
+                font=self.small_font,
+                anchor="w",
+                text_color="gray70"
+            ).grid(row=row, column=0, sticky="w", padx=15, pady=2)
+
+            row += 1
+
+
+        dynamic_ip_title = ctk.CTkLabel(
+            servers_card,
+            text="IP dinámicas",
+            font=self.small_bold_font
+        )
+        dynamic_ip_title.grid(row=row, column=0, sticky="w", padx=15, pady=(10, 5))
+
+        row += 1
+
+        for server in dns_config["dynamic_ips"]:
+            ctk.CTkLabel(
+                servers_card,
+                text=server,
+                font=self.small_font,
+                anchor="w",
+                text_color="gray70"
+            ).grid(row=row, column=0, sticky="w", padx=15, pady=2)
+
+            row += 1
 
     def build_remote_requests_card(self):
         remote_requests_card = ctk.CTkFrame(self.dns_info_scroll_frame, corner_radius=10)
         remote_requests_card.grid(row=1, column=0, sticky="ew", pady=(0, 10), padx=4)
         remote_requests_card.grid_columnconfigure(0, weight=1)
 
+        dns_config = self.controller.get_dns_configuration()
+
         ctk.CTkLabel(
             remote_requests_card,
-            text="Allow Remote Requests:",
+            text="Permitir solicitudes remotas:",
             font=self.small_bold_font,
             anchor="w",
         ).grid(row=0, column=0, sticky="w", padx=15, pady=(15, 5))
 
+        status = "Sí" if not dns_config["remote_request"] else "No"
+                
         ctk.CTkLabel(
             remote_requests_card,
-            text=self.current_allow_remote_requests,
+            text= status ,
             font=self.small_font,
             anchor="w",
             text_color="gray70",
