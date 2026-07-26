@@ -23,15 +23,24 @@ class DnsController:
 
             dns_api.update(
                 servers="",
-                **{"allow-remote-requests": "no"}
+                **{"allow-remote-requests": False}
             )
-
-            dns_static = self.session.api.path("ip", "dns", "static")
-
-            for record in list(dns_static):
-                dns_static.remove(record[".id"])
-
-            return True, "Se ha reseteado la configuración del DNS correctamente."
+            
+            return True, "DNS reseteado correctamente."
 
         except Exception as e:
             return False, f"Error al resetear DNS: {str(e)}"
+        
+    def update_dns_configuration(self, ip_servers, allow_remote_requests):
+        try:
+            dns_api = self.session.api.path("ip", "dns")
+
+            dns_api.update(
+                servers=ip_servers,
+                **{"allow-remote-requests": allow_remote_requests}
+            )
+
+            return True, "Se ha actualizado la configuración del DNS correctamente."
+
+        except Exception as e:
+            return False, f"Error al actualizar DNS: {str(e)}"

@@ -38,13 +38,14 @@ class DnsView(ctk.CTkFrame):
         self.dns_servers_entry.grid(row=2, column=0, sticky="ew", padx=20, pady=(2, 15))
 
         ctk.CTkLabel(
-            self.config_frame, text="Allow Remote Requests", font=self.label_font
+            self.config_frame, text="Permitir solicitudes remotas", font=self.label_font
         ).grid(row=3, column=0, sticky="w", padx=20)
         self.remote_requests_combo = ctk.CTkComboBox(self.config_frame, values=["Sí", "No"])
         self.remote_requests_combo.grid(row=4, column=0, sticky="ew", padx=20, pady=(2, 25))
 
         self.save_dns_button = ctk.CTkButton(
-            self.config_frame, text="Guardar Configuración DNS"
+            self.config_frame, text="Guardar Configuración DNS",
+            command= lambda : self.update_dns_configuration()
         )
         self.save_dns_button.grid(row=5, column=0, sticky="ew", padx=20, pady=(0, 20))
 
@@ -147,7 +148,7 @@ class DnsView(ctk.CTkFrame):
             anchor="w",
         ).grid(row=0, column=0, sticky="w", padx=15, pady=(15, 5))
 
-        status = "Sí" if not dns_config["remote_request"] else "No"
+        status = "Sí" if dns_config["remote_request"] else "No"
                 
         ctk.CTkLabel(
             remote_requests_card,
@@ -159,6 +160,19 @@ class DnsView(ctk.CTkFrame):
     
     def reset_dns_configuration(self):
         success, message = self.controller.reset_dns_configuration()
+        self.show_message(message)
+        
+        if success:
+            self.build_dns_servers_card()
+            self.build_remote_requests_card()
+
+    def update_dns_configuration(self):
+        ip_dns_server = self.dns_servers_entry.get()
+        allow_remote_request = True if self.remote_requests_combo.get() == "Sí" else False
+        
+        
+    
+        success, message = self.controller.update_dns_configuration(ip_dns_server, allow_remote_request)
         self.show_message(message)
         
         if success:
