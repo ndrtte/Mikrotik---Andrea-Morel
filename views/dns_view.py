@@ -72,6 +72,7 @@ class DnsView(ctk.CTkFrame):
             text="Eliminar Configuración DNS",
             fg_color="#c0392b",
             hover_color="#922b21",
+            command=lambda : self.reset_dns_configuration()
         )
         self.delete_dns_button.grid(row=2, column=0, sticky="ew", padx=20, pady=(0, 20))
 
@@ -155,3 +156,11 @@ class DnsView(ctk.CTkFrame):
             anchor="w",
             text_color="gray70",
         ).grid(row=1, column=0, sticky="w", padx=15, pady=(0, 15))
+    
+    def reset_dns_configuration(self):
+        success, message = self.controller.reset_dns_configuration()
+        self.show_message(message)
+        
+        if success:
+            self.build_dns_servers_card()
+            self.build_remote_requests_card()
