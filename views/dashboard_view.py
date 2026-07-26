@@ -30,7 +30,8 @@ class RouterDashboardView(ctk.CTkFrame):
         self.views = {
             "Asignar nombre a Router": "router_name",
             "Direcciones IP": "ip",
-            "DHCP":"dhcp"
+            "DHCP":"dhcp",
+            "DNS" : "dns"
         }
 
         for item in self.views :

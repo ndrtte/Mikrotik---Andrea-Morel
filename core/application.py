@@ -7,6 +7,7 @@ from views.dashboard_view import RouterDashboardView
 from views.router_name_view import RouterNameView
 from views.ip_view import IpView
 from views.dhcp_view import DhcpView
+from views.dns_view import DnsView
 
 from services.router_session_service import RouterSession
 
@@ -96,6 +97,11 @@ class Application(ctk.CTk):
                 self.show_message,
                 self.interface_util,
                 self.pool_address_util
+            ),
+            "dns": lambda: DnsView (
+                self.dashboard.view_container,
+                self.router_name_controller,
+                self.show_message
             )
         }
         
