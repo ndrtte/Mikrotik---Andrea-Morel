@@ -12,11 +12,7 @@ class InterfaceMonitorView(ctk.CTkFrame):
         self._after_id = None
         self.interface_cards = {}
 
-        print("Antes de cargar:", self.interface_names)
-
         self.load_interfaces()
-
-        print("Después de cargar:", self.interface_names)
 
         self.build_ui()
         self.start_monitoring()
