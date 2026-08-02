@@ -8,6 +8,7 @@ from views.router_name_view import RouterNameView
 from views.ip_view import IpView
 from views.dhcp_view import DhcpView
 from views.dns_view import DnsView
+from views.static_routes_view import StaticRoutesViews
 
 from services.router_session_service import RouterSession
 
@@ -16,6 +17,7 @@ from controller.router_name_controller import RouterNameController
 from controller.ip_controller import IpController
 from controller.dhcp_controller import DhcpController
 from controller.dns_controller import DnsController
+from controller.static_routes_controller import StaticRoutesController
 
 from components.notifications import Notification
 
@@ -45,6 +47,8 @@ class Application(ctk.CTk):
         self.pool_address_util = PoolAddressUtil(self.session)
         
         self.dns_controller = DnsController(self.session)
+        
+        self.static_routes_controller = StaticRoutesController(self.session)
         
         self.view_container = ctk.CTkFrame(self)
         self.view_container.pack(
@@ -104,6 +108,11 @@ class Application(ctk.CTk):
             "dns": lambda: DnsView (
                 self.dashboard.view_container,
                 self.dns_controller,
+                self.show_message
+            ),
+            "static_routes" : lambda: StaticRoutesViews (
+                self.dashboard.view_container,
+                self.static_routes_controller,
                 self.show_message
             )
         }
