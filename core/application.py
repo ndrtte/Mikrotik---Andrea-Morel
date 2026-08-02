@@ -52,7 +52,7 @@ class Application(ctk.CTk):
         
         self.static_routes_controller = StaticRoutesController(self.session)
         
-        self.interface_monitor_controller = InterfaceMonitorController(self.session)
+        self.interface_monitor_controller = InterfaceMonitorController(self.session, self.interface_util)
         
         self.view_container = ctk.CTkFrame(self)
         self.view_container.pack(
@@ -122,7 +122,8 @@ class Application(ctk.CTk):
             "interface_monitor" : lambda: InterfaceMonitorView(
                 self.dashboard.view_container,
                 self.interface_monitor_controller,
-                self.show_message
+                self.show_message,
+                self.interface_util
             )
         }
         
