@@ -1,78 +1,84 @@
-import customtkinter as ctk 
+import customtkinter as ctk
 
 class RouterNameView(ctk.CTkFrame):
     def __init__(self, parent, controller, show_message):
-            super().__init__(parent)
+            super().__init__(parent, fg_color="transparent")
             self.controller = controller
             self.app = parent.master
             self.show_message = show_message
 
-            print("Pantalla de nombre de router")
-
             self.title = ctk.CTkLabel(
                 self,
                 text="Asignar nombre al Router",
-                font = ctk.CTkFont(size=22, weight="bold")
+                font=ctk.CTkFont(family="Poppins", size=20, weight="bold"),
+                text_color="#C2185B"
             )
-            self.title.pack(pady=20)
-            
-            self.subtitle = ctk.CTkLabel(
-                self,
-                text="Nombre del Router",
-                font= ctk.CTkFont(size=16, weight="bold")
-            )
-            
-            self.subtitle.pack(pady=5)
-            
-            self.router_name = ctk.CTkLabel(
-                self,
-                text="",
-                font=ctk.CTkFont(size=14)
-            )
+            self.title.pack(pady=(10, 20), anchor="w", padx=20)
 
-            self.router_name.pack()
+            self.card = ctk.CTkFrame(
+                self, corner_radius=16,
+                fg_color="#FDF2F8", border_width=1, border_color="#F8BBD0"
+            )
+            self.card.pack(fill="x", padx=20)
+
+            self.subtitle = ctk.CTkLabel(
+                self.card,
+                text="Nombre actual",
+                font=ctk.CTkFont(family="Poppins", size=13),
+                text_color="#AD1457"
+            )
+            self.subtitle.pack(pady=(15, 0), padx=15, anchor="w")
+
+            self.router_name = ctk.CTkLabel(
+                self.card,
+                text="--",
+                font=ctk.CTkFont(family="Poppins", size=16, weight="bold"),
+                text_color="#880E4F"
+            )
+            self.router_name.pack(pady=(0, 15), padx=15, anchor="w")
 
             self.load_router_name()
 
             self.description = ctk.CTkLabel(
-                self,
-                text="Ingrese el nuevo nombre del dispositivo"
+                self.card,
+                text="Ingrese el nuevo nombre del dispositivo",
+                font=ctk.CTkFont(family="Poppins", size=12),
+                text_color="#6A1B9A"
             )
-            self.description.pack(pady=5)
-
+            self.description.pack(padx=15, anchor="w")
 
             self.router_name_entry = ctk.CTkEntry(
-                self,
-                width=300,
-                placeholder_text="Ejemplo: Router-Principal"
+                self.card,
+                placeholder_text="Ejemplo: Router-Principal",
+                font=ctk.CTkFont(family="Poppins", size=13)
             )
-            self.router_name_entry.pack(pady=10)
+            self.router_name_entry.pack(fill="x", padx=15, pady=(5, 10))
 
             self.save_button = ctk.CTkButton(
-                self,
+                self.card,
                 text="Guardar nombre",
+                fg_color="#EC407A", hover_color="#C2185B",
+                font=ctk.CTkFont(family="Poppins", size=13, weight="bold"),
                 command=self.save_new_router_name
             )
-            self.save_button.pack(pady=20)
+            self.save_button.pack(padx=15, pady=(0, 15), anchor="w")
 
             self.status_label = ctk.CTkLabel(
                 self,
-                text=""
+                text="",
+                font=ctk.CTkFont(family="Poppins", size=12)
             )
-            self.status_label.pack()
-    
+            self.status_label.pack(pady=10)
+
     def load_router_name(self):
         router_name = self.controller.get_router_identity()
         self.router_name.configure(text=router_name)
-    
+
     def save_new_router_name(self):
         new_name = self.router_name_entry.get()
         success, message = self.controller.update_router_name(new_name)
         self.show_message(message)
 
         if success:
+            self.router_name_entry.delete(0, "end")
             self.load_router_name()
-
-        
-        
-        
