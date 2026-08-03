@@ -28,6 +28,9 @@ El proyecto es una aplicación de escritorio desarrollada en Python para la admi
 
 La aplicación utiliza una arquitectura MVC, una interfaz desarrollada con CustomTkinter y la biblioteca `librouteros` para interactuar con RouterOS de MikroTik.
 
+## Arquitectura del proyecto
+<img src="assets/images/Arquitectura.drawio.png" alt="Descripción de la imagen" width="500">
+
 ## Funcionalidades implementadas
 
 | Módulo | Descripción |
