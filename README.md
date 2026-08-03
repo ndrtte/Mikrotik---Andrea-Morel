@@ -6,6 +6,7 @@ Aplicación de escritorio en Python para administrar routers MikroTik mediante s
 
 - [Datos del estudiante](#datos-del-estudiante)
 - [Descripción del proyecto](#descripción-del-proyecto)
+- [Arquitectura del proyecto](#arquitectura-del-proyecto)
 - [Funcionalidades implementadas](#funcionalidades-implementadas)
 - [Tecnologías utilizadas](#tecnologías-utilizadas)
 - [Requisitos](#requisitos)
