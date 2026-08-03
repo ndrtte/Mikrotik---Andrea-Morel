@@ -33,7 +33,8 @@ class RouterDashboardView(ctk.CTkFrame):
             "DHCP":"dhcp",
             "DNS" : "dns",
             "Rutas estaticas" : "static_routes",
-            "Monitorear interfaces" : "interface_monitor"
+            "Monitorear interfaces" : "interface_monitor",
+            "Backups" : "backup"
         }
 
         for item in self.views :

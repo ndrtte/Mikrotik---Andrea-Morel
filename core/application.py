@@ -10,6 +10,7 @@ from views.dhcp_view import DhcpView
 from views.dns_view import DnsView
 from views.static_routes_view import StaticRoutesViews
 from views.interface_monitor_view import InterfaceMonitorView
+from views.backup_view import BackupView
 
 from services.router_session_service import RouterSession
 
@@ -20,6 +21,7 @@ from controller.dhcp_controller import DhcpController
 from controller.dns_controller import DnsController
 from controller.static_routes_controller import StaticRoutesController
 from controller.interface_monitor_controller import InterfaceMonitorController
+from controller.backup_controller import BackupController
 
 from components.notifications import Notification
 
@@ -53,6 +55,8 @@ class Application(ctk.CTk):
         self.static_routes_controller = StaticRoutesController(self.session)
         
         self.interface_monitor_controller = InterfaceMonitorController(self.session, self.interface_util)
+        
+        self.backup_controller = BackupController(self.session)
         
         self.view_container = ctk.CTkFrame(self)
         self.view_container.pack(
@@ -124,6 +128,11 @@ class Application(ctk.CTk):
                 self.interface_monitor_controller,
                 self.show_message,
                 self.interface_util
+            ),
+            "backup" : lambda: BackupView(
+                self.dashboard.view_container,
+                self.backup_controller,
+                self.show_message
             )
         }
         

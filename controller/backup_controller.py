@@ -1,3 +1,5 @@
+from datetime import datetime
+
 class BackupController:
     def __init__(self, session):
          self.session = session
@@ -25,16 +27,25 @@ class BackupController:
             print(f"Error al obtener los backups: {e}")
             return []
         
-    
-    def create_backup(self, name = "", password=""):
-        backup_api = self.session.api.path("system","backup")
         
+    def create_backup(self, name="", password=""):
+        if name.strip() != "":
+            backup_name = name.strip()
+        else:
+            backup_name = f"backup_{datetime.now():%Y-%m-%d_%H-%M-%S}"
+
+        backup_api = self.session.api.path("system", "backup")
+
         try:
-            backup_api.add(**{
-                "name" : name,
-                "password" : password
-                }
+            tuple(
+                backup_api(
+                    "save",
+                    name=backup_name,
+                    password=password
+                )
             )
+
             return True, "Backup creado correctamente"
+
         except Exception as e:
             return False, f"Error al crear el backup: {e}"
