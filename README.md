@@ -124,3 +124,7 @@ python -B app.py
 ```
 
 > **Nota:** el parámetro `-B` evita la generación de archivos de caché `__pycache__` durante la ejecución.
+
+## Documentacion externa
+- [Custom Tkinter](https://customtkinter.tomschimansky.com/documentation/)
+- [librouteros](https://librouteros.readthedocs.io/en/4.1.1/)
