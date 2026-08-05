@@ -24,7 +24,7 @@ class IpController:
     def create_ip(self, ip, target_interface):
         try:
             ip_api = self.session.api.path("ip", "address")
-            ip_api.add(address=ip, interface = target_interface)
+            ip_api.add(address=ip, interface = target_interface) #los parametros son address e intreface y sol ole paso los valores
             
             return True, "Se agrego la ip con exito"
         except Exception as e:
@@ -36,12 +36,12 @@ class IpController:
             record_id = None
 
             for record in ip_api:
-                if record.get("address") == ip:
+                if record.get("address") == ip: #aca primero descrubo la direccion ip y luego obtengo el id y borro
                     record_id = record.get(".id")
                     break
 
             if record_id is None:
-                return False, f"No se encontró la IP {ip}"
+                return False, f"No se encontró la IP {ip}" #si no existe esa ip mando esto
 
             ip_api.remove(record_id)
 

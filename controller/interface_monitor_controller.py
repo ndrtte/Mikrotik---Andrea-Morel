@@ -5,7 +5,7 @@ class InterfaceMonitorController:
 
     def get_interface_monitor(self, interface_name):
         try:
-            success, info = self.interface_util.get_interface_info(interface_name)
+            success, info = self.interface_util.get_interface_info(interface_name) #es para primero obtener las interfaces disponibles y su informaicion como el nombre y status
 
             if not success:
                 return False, info
@@ -18,11 +18,12 @@ class InterfaceMonitorController:
             name = info.get("name")
             status = "Up" if info.get("running") else "Down"
 
+            #son datos que obtengo de las interfaces monitor-traffic 
             interface_data = {
                 "name": name,
                 "status": status,
-                "rx": traffic.get("rx"),
-                "tx": traffic.get("tx")
+                "rx": traffic.get("rx"), #entrada
+                "tx": traffic.get("tx") #salida
             }
 
             return True, interface_data
@@ -34,18 +35,18 @@ class InterfaceMonitorController:
         try:
             interface_api = self.session.api.path(
                 "interface"
-            )
+            ) #utilizo la ruta de /interface
 
             data = list(
                 interface_api(
-                    "monitor-traffic",
+                    "monitor-traffic", #monitor-traffic es por el comando /interface monitor-traffic
                     interface=interface_name,
                     once=True
                 )
             )[0]
 
             return True, {
-                "rx": data.get("rx-bits-per-second"),
+                "rx": data.get("rx-bits-per-second"), #es para no traer todo el nombre y solo lo entendible
                 "tx": data.get("tx-bits-per-second")
             }
 
