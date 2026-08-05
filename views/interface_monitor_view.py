@@ -1,13 +1,16 @@
 import customtkinter as ctk
 
 class InterfaceMonitorView(ctk.CTkFrame):
-    REFRESH_INTERVAL_MS = 2000
+    """
+            Vista para monitorear las interfaces
+    """
+    REFRESH_INTERVAL_MS = 2000 #Cada cuanto se van a actualizar los valores mostrados en pantalla en milisegundos, son cada 2 segundos
     def __init__(self, parent, controller, show_message, interface_util):
         super().__init__(parent, fg_color="transparent")
 
         self.controller = controller
         self.show_message = show_message
-        self.interface_util = interface_util
+        self.interface_util = interface_util #Lo necesito para cargar solo las interfaces disponibles 
         self.interface_names = []
         self._after_id = None
         self.interface_cards = {}
@@ -70,15 +73,18 @@ class InterfaceMonitorView(ctk.CTkFrame):
 
         self.interface_cards[iface_name] = {
             "status": status_label,
-            "rx": rx_label,
-            "tx": tx_label
+            "rx": rx_label, #entrada
+            "tx": tx_label #salida
         }
 
         return card
 
+
+    #Para iniciar el monitorieo y refrescar la pagina cada 2 segundos
     def start_monitoring(self):
         self.refresh_data()
 
+    #Si no hay nada se invoca este para no consurmir datos
     def stop_monitoring(self):
         if self._after_id is not None:
             self.after_cancel(self._after_id)
@@ -113,6 +119,7 @@ class InterfaceMonitorView(ctk.CTkFrame):
         self.stop_monitoring()
         super().destroy()
         
+    #Solo las interfaces disponibles manda a traer
     def load_interfaces(self):
         success, interfaces = self.interface_util.get_all_interfaces()
         if success:

@@ -3,6 +3,9 @@ from views.router_name_view import RouterNameView
 from views.ip_view import IpView
 
 class RouterDashboardView(ctk.CTkFrame):
+    """
+    Vista para listar las opciones del menu
+    """
     def __init__(self, parent, navigate):
         super().__init__(parent)
         self.navigate = navigate
@@ -27,6 +30,7 @@ class RouterDashboardView(ctk.CTkFrame):
 
         self.current_view = None
         
+        #En esta parte se utiliza un diciconario para definir las opciones del menu y a que corresponde sus vista (parte del /core/application.py)
         self.views = {
             "Asignar nombre a Router": "router_name",
             "Direcciones IP": "ip",
@@ -37,11 +41,13 @@ class RouterDashboardView(ctk.CTkFrame):
             "Backups" : "backup"
         }
 
+        #Aca recorro para mostrarlos en el meny y el command lambda es para que no se ejecute al menos a que yo haga click
         for item in self.views :
             ctk.CTkButton(
                 self.sidebar,
                 text=item,
-                command=lambda i=item: self.navigate(self.views[i])
+                command=lambda i=item: self.navigate(self.views[i]) #en el application esta una parte que fine las vistas y qqui el navigate 
+                                                                    #se busca mediante al valor de la clave por ejemplo self.view[DHCP] = "dhcp"
             ).pack(pady=5, fill="x")
 
 
@@ -57,6 +63,7 @@ class RouterDashboardView(ctk.CTkFrame):
         self.view_container = ctk.CTkFrame(self.content)
         self.view_container.pack(fill="both", expand=True)
 
+    #el padre de la subpantallas es el dashboard asi que aqui lo que hago es que secargue pero que se siga viendo el menu
     def load_view(self, view):
 
         self.content_label.pack_forget()

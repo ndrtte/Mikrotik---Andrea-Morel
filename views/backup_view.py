@@ -5,9 +5,6 @@ class BackupView(ctk.CTkFrame):
     """
     Vista para listar y crear backups del router.
     """
-
-    REFRESH_INTERVAL_MS = 5000  # cada 5 segundos
-
     def __init__(self, parent, controller, show_message):
         super().__init__(parent, fg_color="transparent")
 
@@ -17,10 +14,9 @@ class BackupView(ctk.CTkFrame):
         self.name_entry = None
         self.password_entry = None
         self.backups_container = None
-        self.after_id = None
 
         self.build_ui()
-        self.start_auto_refresh()
+        self.load_backups()
 
     def build_ui(self):
         title = ctk.CTkLabel(
@@ -92,19 +88,7 @@ class BackupView(ctk.CTkFrame):
             self.password_entry.delete(0, "end")
             self.load_backups()
 
-    def start_auto_refresh(self):
-        self.load_backups()
-        self.after_id = self.after(self.REFRESH_INTERVAL_MS, self.start_auto_refresh)
-
-    def stop_auto_refresh(self):
-        if self.after_id is not None:
-            self.after_cancel(self.after_id)
-            self.after_id = None
-
-    def destroy(self):
-        self.stop_auto_refresh()
-        super().destroy()
-
+    #cargar los backups
     def load_backups(self):
         for widget in self.backups_container.winfo_children():
             widget.destroy()
@@ -123,6 +107,7 @@ class BackupView(ctk.CTkFrame):
         for backup in backups:
             self.create_backup_row(backup)
 
+    #crearlos y aca manejaro lo de que manden vacios para que el backend cotnroles esa parte
     def create_backup_row(self, backup):
         row = ctk.CTkFrame(self.backups_container, fg_color="#FFFFFF", corner_radius=10)
         row.pack(fill="x", padx=5, pady=5)

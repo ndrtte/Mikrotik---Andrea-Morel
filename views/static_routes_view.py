@@ -1,6 +1,9 @@
 import customtkinter as ctk
 
 class StaticRoutesViews(ctk.CTkFrame):
+    """
+        Vista para crear y eliminar y ver rutas estaticas
+    """
     def __init__(self, parent, controller, show_message):
         super().__init__(parent, fg_color="transparent")
         self.controller = controller
@@ -90,6 +93,7 @@ class StaticRoutesViews(ctk.CTkFrame):
 
         self.load_routes()
 
+    #Para cargar las routas existentes 
     def load_routes(self):
         for widget in self.routes_scroll.winfo_children():
             widget.destroy()
@@ -107,6 +111,7 @@ class StaticRoutesViews(ctk.CTkFrame):
         for idx, route in enumerate(routes):
             self.create_route_card(route, idx)
 
+    #Para crear nuevas rutas
     def create_route_card(self, route, index):
         card = ctk.CTkFrame(self.routes_scroll, fg_color="#FFFFFF", corner_radius=10)
         card.grid(row=index, column=0, sticky="ew", pady=(0, 10), padx=4)
@@ -143,19 +148,21 @@ class StaticRoutesViews(ctk.CTkFrame):
             font=self.small_font, anchor="w", text_color="#6A1B9A"
         ).grid(row=2, column=1, sticky="w", padx=(0, 15), pady=(0, 10))
 
+    #Para borrarlas
     def delete_selected_route(self):
         route_id = self.selected_route_id.get()
 
         if not route_id:
-            self.show_message("No hay ninguna ruta seleccionada.")
+            self.show_message("No hay ninguna ruta seleccionada.") #Una ecepcion por si acaso 
             return
 
         success, message = self.controller.delete_static_route(route_id)
         self.show_message(message)
         if success:
-            self.selected_route_id.set("")
+            self.selected_route_id.set("")#para deseleccionar
             self.load_routes()
 
+#Para añadir
     def add_static_route(self):
         dest = self.dest_entry.get().strip()
         gateway = self.gateway_entry.get().strip()

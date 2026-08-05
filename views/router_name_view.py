@@ -1,6 +1,9 @@
 import customtkinter as ctk
 
 class RouterNameView(ctk.CTkFrame):
+    """
+        Vista para asignar nombre al router
+    """
     def __init__(self, parent, controller, show_message):
             super().__init__(parent, fg_color="transparent")
             self.controller = controller
@@ -31,13 +34,13 @@ class RouterNameView(ctk.CTkFrame):
 
             self.router_name = ctk.CTkLabel(
                 self.card,
-                text="--",
+                text="--", #Por defecto es este el nombre
                 font=ctk.CTkFont(family="Poppins", size=16, weight="bold"),
                 text_color="#880E4F"
             )
             self.router_name.pack(pady=(0, 15), padx=15, anchor="w")
 
-            self.load_router_name()
+            self.load_router_name() #Para cargar el nombre del controlador
 
             self.description = ctk.CTkLabel(
                 self.card,
@@ -71,12 +74,12 @@ class RouterNameView(ctk.CTkFrame):
             self.status_label.pack(pady=10)
 
     def load_router_name(self):
-        router_name = self.controller.get_router_identity()
-        self.router_name.configure(text=router_name)
+        router_name = self.controller.get_router_identity() 
+        self.router_name.configure(text=router_name) #Esta funcion lo que hace es acceder al valor del Label
 
     def save_new_router_name(self):
         new_name = self.router_name_entry.get()
-        success, message = self.controller.update_router_name(new_name)
+        success, message = self.controller.update_router_name(new_name) #Para guardar el nuevo nombre
         self.show_message(message)
 
         if success:

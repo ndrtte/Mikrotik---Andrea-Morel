@@ -1,6 +1,10 @@
 import customtkinter as ctk
 
 class IpView(ctk.CTkFrame):
+    
+    """
+        Vista para crear y eliminar las IPS y verlas tambien
+    """
     def __init__(self, parent, controller, show_message, interface_util):
         super().__init__(parent, fg_color="transparent")
 
@@ -97,6 +101,7 @@ class IpView(ctk.CTkFrame):
         ctk.CTkLabel(header, text="Interfaz", width=120, font=header_font, text_color="#880E4F").grid(row=0, column=2)
         ctk.CTkLabel(header, text="Acción", width=90, font=header_font, text_color="#880E4F").grid(row=0, column=3)
 
+    #Aca de cargan en las tablas
     def load_ips(self):
         for widget in self.list_frame.winfo_children():
             if widget.winfo_name() != "!ctkframe":
@@ -139,14 +144,17 @@ class IpView(ctk.CTkFrame):
                 command=lambda ip=item["ip"]: self.delete_ip(ip)
             ).grid(row=0, column=3, padx=5)
 
+    #Para crearlas solo se manda parametro de ip e interfaz
     def create_ip(self, ip, interface):
         success, message = self.controller.create_ip(ip, interface)
         self.show_message(message)
 
         if success:
             self.ip_entry.delete(0, "end")
+            #Para volver a cargar 
             self.load_ips()
 
+    #Eliminar solo por ip para comparar en el controlador
     def delete_ip(self, ip):
         success, message = self.controller.delete_ip(ip)
         self.show_message(message)

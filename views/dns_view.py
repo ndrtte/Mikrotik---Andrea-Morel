@@ -1,6 +1,9 @@
 import customtkinter as ctk
 
 class DnsView(ctk.CTkFrame):
+    """
+        Vista para la configuracion y resetear el DNS
+    """
     def __init__(self, parent, controller, show_message):
         super().__init__(parent, fg_color="transparent")
 
@@ -93,6 +96,7 @@ class DnsView(ctk.CTkFrame):
         )
         self.delete_dns_button.grid(row=2, column=0, sticky="ew", padx=20, pady=(0, 20))
 
+    #En esta parte es para mostrar la configuracion del DNS, ips estaticas y dinamicas
     def build_dns_servers_card(self):
         if self.servers_card is not None:
             self.servers_card.destroy()
@@ -155,6 +159,7 @@ class DnsView(ctk.CTkFrame):
 
             row += 1
 
+    #Lo de permitir solicitudes remotas enseñarlo
     def build_remote_requests_card(self):
         if self.remote_requests_card is not None:
             self.remote_requests_card.destroy()
@@ -183,6 +188,7 @@ class DnsView(ctk.CTkFrame):
             text_color="#6A1B9A",
         ).grid(row=1, column=0, sticky="w", padx=15, pady=(0, 15))
 
+    #Manda a resetear al configuracion sin parametros
     def reset_dns_configuration(self):
         success, message = self.controller.reset_dns_configuration()
         self.show_message(message)
@@ -191,6 +197,7 @@ class DnsView(ctk.CTkFrame):
             self.build_dns_servers_card()
             self.build_remote_requests_card()
 
+    #Aca solo modifica lo que ya esta, no crea nada, aca es mas de obtener los valores del formulario
     def update_dns_configuration(self):
         ip_dns_server = self.dns_servers_entry.get()
         allow_remote_request = True if self.remote_requests_combo.get() == "Sí" else False

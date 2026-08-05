@@ -2,6 +2,9 @@ import customtkinter as ctk
 
 class DhcpView(ctk.CTkFrame):
     def __init__(self, parent, controller, show_message, interface_util, pool_address):
+        """
+            Vista para la creacion y eliminar configuraciones DHCP Server
+        """
         super().__init__(parent, fg_color="transparent")
 
         self.controller = controller
@@ -208,6 +211,7 @@ class DhcpView(ctk.CTkFrame):
         )
         self.delete_selected_button.grid(row=2, column=0, sticky="ew", padx=20, pady=(0, 20))
 
+    #Aca de encarga de cargar los servidores que ya existen, se invoca en mas funciones como leimianr y crear para actualizar
     def load_server_list(self):
         for widget in self.server_list_frame.winfo_children():
             widget.destroy()
@@ -264,6 +268,7 @@ class DhcpView(ctk.CTkFrame):
             anchor="w",
         ).grid(row=3, column=1, sticky="w", padx=(0, 15), pady=(2, 15))
 
+
     def create_pool(self):
         pool_name = self.pool_name_entry.get()
         pool_ranges = self.pool_range_entry.get()
@@ -280,12 +285,14 @@ class DhcpView(ctk.CTkFrame):
             self.pool_range_entry.delete(0, "end")
             self.refresh_pool_options()
 
+    #Estos es para para refrescar las opciones del pool si creo uno invoco esta funcion para actualziarlo, como algo asincrono
     def refresh_pool_options(self):
         success, address_pools = self.pool_address.get_pool()
         if success:
             self.address_pool_combobox.configure(values=address_pools)
             if address_pools:
                 self.address_pool_combobox.set(address_pools[0])
+
 
     def create_dhcp_network(self):
         dhcp_address = self.network_address_entry.get()

@@ -1,10 +1,15 @@
 import customtkinter as ctk
 
 class ConnectionView(ctk.CTkFrame):
-    def __init__(self, parent, controller, on_success, show_message):
+    """
+    Vista para la conexion (Esta es la primera pantalla)
+    """
 
+    def __init__(self, parent, controller, on_success, show_message):
+        #En todos las vistas se recibe los controladores, que son las funciones del backend.
         self.controller = controller
         self.on_success = on_success
+        #Componente reutilizable para mostrar los mensajes en pantalla
         self.show_message = show_message
         super().__init__(parent, fg_color="transparent")
 
@@ -76,8 +81,9 @@ class ConnectionView(ctk.CTkFrame):
         entry.grid(row=row + 1, column=0, padx=40, pady=(0, 12), sticky="ew")
         return entry
 
+    #Esta funcion manda a llamar al controlador de connect para mandarle los parametros ingresados al principio
     def on_connect(self):
-
+        #.get lo que hace es traer los datos de los campos del login, como seria un innerHtml o un .value en HTML
         ip = self.ip_entry.get()
         user = self.user_entry.get()
         password = self.password_entry.get()
@@ -94,5 +100,6 @@ class ConnectionView(ctk.CTkFrame):
         )
         self.show_message(message)
 
+        #Cuando sucede que exitosos el login se renderiza a la otra ventana del menu
         if success:
             self.on_success()
