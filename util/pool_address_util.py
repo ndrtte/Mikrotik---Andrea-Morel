@@ -2,6 +2,7 @@ class PoolAddressUtil:
     def __init__(self, session):
         self.session = session
     
+    #Estes util es para separar responsabilidades ya que crear un pool es independiente de crear DHCP, un pool se puede crear por muchas razones mas
     def create_ip_pool(self, pool_name, pool_ranges):
         pool_api = self.session.api.path("ip","pool")
         
@@ -18,6 +19,7 @@ class PoolAddressUtil:
         except Exception as e:
             False, f"Hay un error de insercion: {str(e)}"
     
+    #Para cargarlas en los vista de DHCP
     def get_pool(self):        
         try:
             pool_list = [

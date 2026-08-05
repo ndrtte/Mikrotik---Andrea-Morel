@@ -28,16 +28,23 @@ from components.notifications import Notification
 from util.interface_util import InterfaceUtil
 from util.pool_address_util import PoolAddressUtil
 
+"""
+    Aca practimente es el corazonde la aplicacion, esta es la pantalla padre, la que carga todos las vistas, 
+    hace referencias hacia el mismo objeto de sesion y carga los controladores
+"""
+
 class Application(ctk.CTk):
 
     def __init__(self):
         super().__init__()
 
-        self.title(APP_NAME)
+        self.title(APP_NAME) #Estas son variables que tengo como de configuracion para no utilizar datos comandos, viene de la carpeta config
         self.geometry(f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}")
 
+        #La sesion es el primer objeto que vive
         self.session = RouterSession()
 
+        #los controladores y utiles se inicializan con el obejto session que ya tiene la conexion hacia el mikrotik
         self.connect_controller = ConnectController(self.session)
 
         self.router_name_controller = RouterNameController(self.session)
@@ -64,12 +71,14 @@ class Application(ctk.CTk):
             expand=True
         )
 
+        #Esta parte es para la parte reutilizable es para mostrar los mesnaje en pantalla
         self.notification = Notification(self)
         self.notification.pack(
             side="bottom",
             fill="x"
         )
-
+        
+        #La primera pantalla de conexion para cargarla
         self.show_connection()
 
     def show_connection(self):
@@ -84,6 +93,7 @@ class Application(ctk.CTk):
 
         connection.pack(fill="both", expand=True)
 
+#Para navegar en el menu del dashboard y cargar las vistas
     def show_dashboard(self):
         self.clear_view()
 
@@ -94,6 +104,7 @@ class Application(ctk.CTk):
 
         self.dashboard.pack(fill="both", expand=True)
         
+        #En dashboard, en el diciconario, el valor de las claves son estos obejtos que estan aca pero son lambda para que no se ejecuten sin hacer click
         self.routes = {
             "router_name": lambda: RouterNameView(
                 self.dashboard.view_container,
@@ -136,16 +147,18 @@ class Application(ctk.CTk):
             )
         }
         
+    #Navegar en el dashboard 
     def navigate(self, page):
             if page in self.routes:
                 self.dashboard.load_view(
                     self.routes[page]()
                 )
 
+    #Limpiar la vista anterior
     def clear_view(self):
         for widget in self.view_container.winfo_children():
             widget.destroy()
     
-    
+    #Mostrar las notificaciones 
     def show_message(self, message):
         self.notification.show(message)
